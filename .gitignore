@@ -1,7 +1,7 @@
 =================================================
 # Ignore terraform internals
 #
- 
+# 
 # Compiled files
 *.tfstate
 *.tfstate.backup
