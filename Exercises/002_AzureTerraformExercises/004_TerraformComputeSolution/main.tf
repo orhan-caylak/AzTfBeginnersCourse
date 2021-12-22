@@ -75,17 +75,40 @@ resource "azurerm_network_security_group" "webserver" {
   security_rule {
     access                     = "Allow"
     direction                  = "Inbound"
-    name                       = "tls"
+    name                       = "SSH"
     priority                   = 100
+    protocol                   = "Tcp"
+    source_port_range          = "*"
+    source_address_prefix      = "*"
+    destination_port_range     = "22"
+    destination_address_prefix = "*"
+  }
+  security_rule {
+    access                     = "Allow"
+    direction                  = "Inbound"
+    name                       = "Web"
+    priority                   = 101
+    protocol                   = "Tcp"
+    source_port_range          = "*"
+    source_address_prefix      = "*"
+    destination_port_range     = "80"
+    destination_address_prefix = "*"
+  }
+ security_rule {
+    access                     = "Allow"
+    direction                  = "Inbound"
+    name                       = "tls"
+    priority                   = 102
     protocol                   = "Tcp"
     source_port_range          = "*"
     source_address_prefix      = "*"
     destination_port_range     = "443"
     destination_address_prefix = azurerm_network_interface.main.private_ip_address
   }
+
 }
 resource "azurerm_network_interface_security_group_association" "example" {
-  network_interface_id      = azurerm_network_interface.internal.id
+  network_interface_id      = azurerm_network_interface.main.id
   network_security_group_id = azurerm_network_security_group.webserver.id
 }
 resource "azurerm_linux_virtual_machine" "example" {
